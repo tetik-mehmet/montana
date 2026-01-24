@@ -1,36 +1,212 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gym Membership & Package Management System
 
-## Getting Started
+Modern bir spor salonu üyelik ve paket yönetim sistemi. Next.js App Router, MongoDB, NextAuth ve Tailwind CSS kullanılarak geliştirilmiştir.
 
-First, run the development server:
+## Özellikler
+
+### ✅ Tamamlanan Özellikler
+
+- **Authentication**: NextAuth.js ile güvenli admin girişi
+- **Dashboard**: İstatistikler, aktif üye sayısı, gelir raporları
+- **Üye Yönetimi**: CRUD işlemleri, arama, filtreleme, pagination
+- **Paket Yönetimi**: Üyelik paketleri oluşturma, düzenleme, aktif/pasif yapma
+- **Üyelik Yönetimi**: Yeni üyelik oluşturma, otomatik bitiş tarihi hesaplama
+- **Responsive Design**: Mobile-first yaklaşım, tüm cihazlarda uyumlu
+
+## Teknoloji Stack
+
+- **Frontend/Backend**: Next.js 15 (App Router), React 19, TypeScript
+- **Database**: MongoDB + Mongoose
+- **Authentication**: NextAuth.js (Credentials)
+- **Styling**: Tailwind CSS
+- **Validation**: Native HTML5 + Mongoose
+
+## Kurulum
+
+### 1. Proje Bağımlılıklarını Yükle
+
+```bash
+npm install
+```
+
+### 2. Environment Variables
+
+`.env.local` dosyasını kontrol edin ve gerekli ayarları yapın:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/gym-management
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=gym-secret-key-change-this-in-production-2024
+```
+
+### 3. MongoDB Kurulumu
+
+- MongoDB'nin local veya cloud (MongoDB Atlas) üzerinde çalıştığından emin olun
+- Connection string'i `.env.local` dosyasına ekleyin
+
+### 4. Database Seed (İlk Admin Kullanıcı)
+
+```bash
+npm run seed
+```
+
+Bu komut şunları oluşturur:
+- Admin kullanıcı (email: admin@gym.com, şifre: admin123)
+- Örnek paketler (Aylık, 3 Aylık, Yıllık)
+
+### 5. Development Server'ı Başlat
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Varsayılan Giriş Bilgileri
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Email**: admin@gym.com
+- **Şifre**: admin123
 
-## Learn More
+## Proje Yapısı
 
-To learn more about Next.js, take a look at the following resources:
+```
+montana/
+├── src/
+│   ├── app/                      # Next.js App Router pages
+│   │   ├── api/                  # API Routes
+│   │   │   ├── auth/             # NextAuth endpoints
+│   │   │   ├── members/          # Members CRUD
+│   │   │   ├── packages/         # Packages CRUD
+│   │   │   ├── memberships/      # Memberships CRUD
+│   │   │   ├── stats/            # Dashboard statistics
+│   │   ├── dashboard/            # Dashboard page
+│   │   ├── members/              # Members management
+│   │   ├── packages/             # Packages management
+│   │   ├── memberships/          # Memberships management
+│   │   └── login/                # Login page
+│   ├── components/
+│   │   ├── ui/                   # Reusable UI components
+│   │   ├── layout/               # Layout components
+│   │   └── forms/                # Form components
+│   ├── lib/
+│   │   ├── db.ts                 # MongoDB connection
+│   │   ├── auth.ts               # NextAuth configuration
+│   │   └── utils.ts              # Helper functions
+│   ├── models/                   # Mongoose models
+│   │   ├── User.ts
+│   │   ├── Member.ts
+│   │   ├── Package.ts
+│   │   └── Membership.ts
+│   └── types/                    # TypeScript type definitions
+├── scripts/
+│   └── seed.ts                   # Database seeding script
+└── public/                       # Static files
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Authentication
+- `POST /api/auth/signin` - Admin girişi
+- `POST /api/auth/signout` - Çıkış
 
-## Deploy on Vercel
+### Members
+- `GET /api/members` - Üyeleri listele (search, pagination)
+- `POST /api/members` - Yeni üye ekle
+- `GET /api/members/[id]` - Tek üye getir
+- `PUT /api/members/[id]` - Üye güncelle
+- `DELETE /api/members/[id]` - Üye sil
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Packages
+- `GET /api/packages` - Paketleri listele
+- `POST /api/packages` - Yeni paket ekle
+- `GET /api/packages/[id]` - Tek paket getir
+- `PUT /api/packages/[id]` - Paket güncelle
+- `DELETE /api/packages/[id]` - Paket sil
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Memberships
+- `GET /api/memberships` - Üyelikleri listele (filters, pagination)
+- `POST /api/memberships` - Yeni üyelik oluştur
+- `GET /api/memberships/[id]` - Tek üyelik getir
+- `PUT /api/memberships/[id]` - Üyelik güncelle
+- `DELETE /api/memberships/[id]` - Üyelik iptal et
+
+### Stats
+- `GET /api/stats` - Dashboard istatistikleri
+
+
+## Database Models
+
+### User (Admin)
+- email, password (hashed), name, role
+
+### Member (Gym Üyeleri)
+- firstName, lastName, email, phone
+- dateOfBirth, gender, address
+- emergencyContact (name, phone)
+- status (active, inactive, expired)
+
+### Package (Üyelik Paketleri)
+- name, description
+- duration (günler), price
+- features (array), isActive
+
+### Membership (Aktif Üyelikler)
+- member (ref), package (ref)
+- startDate, endDate (otomatik hesaplanan)
+- status (active, expired, cancelled)
+- price, paymentMethod, notes
+
+## Üyelik Durum Yönetimi
+
+Süresi dolan üyeliklerin durumunu manuel olarak kontrol edebilir ve güncelleyebilirsiniz. Dashboard üzerinden aktif üyelikleri görüntüleyebilir ve gerektiğinde manuel güncelleme yapabilirsiniz.
+
+## Deployment
+
+### Vercel'e Deploy
+
+1. Projeyi GitHub'a push edin
+2. Vercel Dashboard'da "New Project" oluşturun
+3. Environment variables'ı ekleyin:
+   - `MONGODB_URI`
+   - `NEXTAUTH_URL`
+   - `NEXTAUTH_SECRET`
+4. Deploy edin
+
+### MongoDB Atlas Setup
+
+1. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) hesabı oluşturun
+2. Yeni cluster oluşturun
+3. Database user ve network access ayarlarını yapın
+4. Connection string'i alın ve `MONGODB_URI`'ye ekleyin
+
+## Geliştirme Notları
+
+### Responsive Design
+- Mobile-first yaklaşım
+- Sidebar: Desktop'ta sabit, mobile'da hamburger menu
+- Tables: Mobile'da card görünümüne dönüşür
+- Forms: Tek sütun (mobile), çift sütun (desktop)
+
+### Güvenlik
+- Bcrypt ile password hashing
+- NextAuth session yönetimi
+- Protected routes (middleware)
+- Input validation
+
+## Gelecek İyileştirmeler
+
+- [ ] Excel/PDF export özelliği
+- [ ] Email bildirimleri (üyelik sona erme uyarıları)
+- [ ] Devamsızlık takip sistemi
+- [ ] Ödeme geçmişi ve fatura oluşturma
+- [ ] Grafik ve raporlama araçları
+- [ ] Multi-language desteği
+- [ ] Dark mode
+
+## Lisans
+
+Bu proje öğrenme amaçlı geliştirilmiştir.
+
+## İletişim
+
+Sorularınız için: admin@gym.com
