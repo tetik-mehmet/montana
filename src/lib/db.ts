@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
 declare global {
-  var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
+  var mongooseCache: {
+    conn: Mongoose | null;
+    promise: Promise<Mongoose> | null;
+  } | undefined;
 }
 
 const MONGODB_URI = process.env.MONGODB_URI!;
@@ -13,11 +13,11 @@ if (!MONGODB_URI) {
   throw new Error('MONGODB_URI tanımlanmamış. Lütfen .env.local dosyasını kontrol edin.');
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+if (!global.mongooseCache) {
+  global.mongooseCache = { conn: null, promise: null };
 }
+
+const cached = global.mongooseCache;
 
 async function connectDB() {
   if (cached.conn) {

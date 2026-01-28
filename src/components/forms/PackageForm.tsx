@@ -45,8 +45,8 @@ export default function PackageForm({ initialData, onSubmit, onCancel }: Package
         price: parseFloat(formData.price),
         features: formData.features
           .split('\n')
-          .map((f) => f.trim())
-          .filter((f) => f),
+          .map((f: string) => f.trim())
+          .filter((f: string) => f),
         isActive: formData.isActive,
       };
 
